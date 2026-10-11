@@ -1,0 +1,22 @@
+class Ilyrics < Formula
+  desc "Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization"
+  homepage "https://github.com/x96x64/ilyrics"
+  url "https://github.com/x96x64/ilyrics/archive/refs/tags/v0.2.0.tar.gz"
+  sha256 "41d919e5368185c380f6c37e1354b810ae547b475e17c43c0145e917aba1c3fa"
+  license "Apache-2.0"
+  head "https://github.com/x96x64/ilyrics.git", branch: "main"
+
+  depends_on arch: :arm64
+  depends_on macos: :sonoma
+
+  def install
+    system "swift", "build", "--disable-sandbox", "-c", "release", "--product", "ilyrics"
+    bin.install ".build/release/ilyrics"
+    (share/"ilyrics").install "share/ilyrics/templates"
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/ilyrics --version")
+    assert_match "share/ilyrics/templates", shell_output("#{bin}/ilyrics models status")
+  end
+end
