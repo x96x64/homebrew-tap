@@ -1,4 +1,4 @@
-# x96x64 Homebrew Tap
+# iLyric Homebrew Tap
 
 Homebrew formulae for [iLyric](https://github.com/x96x64/ilyric), a macOS command that renders lyrics videos reproducing the Lyrics screen of the Music app on iPhone and synchronizes plain lyrics to a recording on device.
 
@@ -8,19 +8,7 @@ Homebrew formulae for [iLyric](https://github.com/x96x64/ilyric), a macOS comman
 brew install x96x64/tap/ilyric
 ```
 
-The shorthand taps this repository automatically. Equivalently:
-
-```bash
-brew tap x96x64/tap
-brew install ilyric
-```
-
-Then check the environment and install the alignment models:
-
-```bash
-ilyric doctor
-ilyric models install
-```
+This one command adds the tap and installs iLyric. The alignment models are downloaded and installed on first use; to check the environment and install them in advance, run `ilyric doctor` and `ilyric models install`.
 
 ## Formulae
 
