@@ -14,7 +14,7 @@ This one command adds the tap and installs iLyrics. The alignment models are dow
 
 | Formula | Description | Version |
 | --- | --- | --- |
-| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.0.1 |
+| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.1.0 |
 
 ## Requirements
 
