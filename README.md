@@ -8,7 +8,7 @@ Homebrew formulae for [iLyrics](https://github.com/x96x64/ilyrics), a macOS comm
 brew install x96x64/tap/ilyrics
 ```
 
-This one command adds the tap and installs iLyrics. The alignment models are downloaded and installed on first use; to check the environment and install them in advance, run `ilyric doctor` and `ilyric models install`.
+This one command adds the tap and installs iLyrics. The alignment models are downloaded and installed on first use; to check the environment and install them in advance, run `ilyrics doctor` and `ilyrics models install`.
 
 ## Formulae
 
@@ -40,7 +40,7 @@ Remove the alignment models before uninstalling; they are stored in `~/Library/A
 
 - The formula installs the weightless model templates into `$(brew --prefix)/share/ilyrics/templates`. The alignment models themselves are downloaded from their publishers and rebuilt on first use; no model weights are distributed through Homebrew.
 - The project was renamed from iLyric to iLyrics in version 0.2.0. `brew upgrade` migrates an installed `ilyric` formula to `ilyrics`; afterwards run `ilyrics models install` once, because the model cache moved.
-- iLyrics is a public preview. See the [README](https://github.com/x96x64/ilyrics#readme) for usage, limitations, and the SF Symbols rights statement.
+- See the [iLyrics README](https://github.com/x96x64/ilyrics#readme) for usage, limitations, and the SF Symbols rights statement, and the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) for what changed in each version.
 - Report problems with iLyrics in the [iLyrics issue tracker](https://github.com/x96x64/ilyrics/issues), and problems specific to the formula in this repository's issues.
 
 ## License
