@@ -2,6 +2,10 @@
 
 Homebrew formulae for [iLyrics](https://github.com/x96x64/ilyrics), a macOS command that renders lyrics videos reproducing the Lyrics screen of the Music app on iPhone and synchronizes plain lyrics to a recording on device.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/x96x64/ilyrics/main/docs/media/demo.png" alt="Three full-width frames of a rendered Lyrics video: the first line filling while the playback controls are visible, the next line filling word by word, and the instrumental-gap indicator" width="720">
+</p>
+
 ## Installation
 
 ```bash
@@ -9,6 +13,21 @@ brew install x96x64/tap/ilyrics
 ```
 
 This one command adds the tap and installs iLyrics. The alignment models are downloaded and installed on first use; to check the environment and install them in advance, run `ilyrics doctor` and `ilyrics models install`.
+
+To install iLyrics from a [Brewfile](https://docs.brew.sh/Brew-Bundle-and-Brewfile) with `brew bundle`, add this line:
+
+```ruby
+brew "x96x64/tap/ilyrics"
+```
+
+## Quick Start
+
+```bash
+ilyrics doctor
+ilyrics render "Paper Skies.m4a" paper-skies.txt -o paper-skies.mp4
+```
+
+The first command checks the environment; the second renders a video from a recording and plain lyrics, one sung line per line. See [Usage](https://github.com/x96x64/ilyrics#usage) in the iLyrics README for every option.
 
 ## Formulae
 
