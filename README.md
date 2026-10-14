@@ -33,7 +33,7 @@ The first command checks the environment; the second renders a video from a reco
 
 | Formula | Description | Version |
 | --- | --- | --- |
-| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.1.0 |
+| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.2.0 |
 
 ## Requirements
 
