@@ -33,12 +33,12 @@ The first command checks the environment; the second renders a video from a reco
 
 | Formula | Description | Version |
 | --- | --- | --- |
-| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.2.0 |
+| [`ilyrics`](Formula/ilyrics.rb) | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.3.1 |
 
 ## Requirements
 
 - macOS 14 or later on Apple silicon
-- The Xcode Command Line Tools or Xcode, which provide the Swift toolchain; the formula builds iLyrics from the tagged source
+- Swift 6, provided by Xcode 16 or the Command Line Tools 16 or later; the formula builds iLyrics from the tagged source
 
 ## Updating and Removing
 

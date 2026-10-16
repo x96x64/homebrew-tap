@@ -3,8 +3,8 @@
 class Ilyrics < Formula
   desc "Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization"
   homepage "https://github.com/x96x64/ilyrics"
-  url "https://github.com/x96x64/ilyrics/archive/refs/tags/v1.3.0.tar.gz"
-  sha256 "95a1f285a50b8b8ed0866918b50d1a62f4d02d8a25ab5d51abb3a220e75d7ba9"
+  url "https://github.com/x96x64/ilyrics/archive/refs/tags/v1.3.1.tar.gz"
+  sha256 "086787c3f287ecae0410b84afe7c97e8e0b042357a95cb6f45139b6b720204fd"
   license "Apache-2.0"
   head "https://github.com/x96x64/ilyrics.git", branch: "main"
 
