@@ -1,5 +1,5 @@
 # Formula for the x96x64/homebrew-tap repository (docs/distribution.md). The URL and SHA-256 are set for each
-# release; the tap's formula_renames.json migrates installations of the former `ilyric` formula.
+# release.
 class Ilyrics < Formula
   desc "Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization"
   homepage "https://github.com/x96x64/ilyrics"
