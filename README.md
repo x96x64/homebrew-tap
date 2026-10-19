@@ -4,9 +4,16 @@ This tap distributes two independent command-line tools for music on macOS. [iLy
 
 Neither formula depends on the other. Install only the formulae you need; each section below covers iLyrics first and iLibrary second.
 
+## iLyrics
+
 ```bash
-brew install x96x64/tap/ilyrics     # iLyrics
-brew install x96x64/tap/ilibrary    # iLibrary
+brew install x96x64/tap/ilyrics
+```
+
+## iLibrary
+
+```bash
+brew install x96x64/tap/ilibrary
 ```
 
 ## Contents
