@@ -202,7 +202,7 @@ brew upgrade ilibrary    # iLibrary
 
 ### iLyrics
 
-Only the latest release receives fixes. `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise. The project was renamed from iLyric to iLyrics in version 0.2.0; `brew upgrade` migrates an installed `ilyric` formula to `ilyrics`, after which the models must be installed again, because the model cache moved. This happens automatically at the first `render` or `align` of plain lyrics; `ilyrics models install` is an optional way to do it in advance.
+Only the latest release receives fixes. `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise.
 
 ### iLibrary
 
