@@ -70,7 +70,7 @@ iLibrary prepares downloaded music for a local Apple Music library. It converts 
 - **Ordered addition to Music.** `add` moves each album into the Music media folder, adds it in place, and confirms it before the next album, in release or artist order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
 - **Backup and recovery preparation.** `rebuild prepare` inventories the selected files, classifies every Music registration, verifies a backup on separate APFS or HFS+ storage with a restoration test, and writes a private recovery record that `rebuild status` reports. Neither subcommand changes Music, the source files, or the backup; the staged rebuilding of a library is not implemented.
 - **Previews and verification.** Every mutating command offers `--dry-run` and lists its changes first; written files are read back and compared with the plan.
-- **Diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates, and `check --library` compares files with Music, reading the library in bulk only when every track's cloud status is `unknown` and otherwise track by track. `doctor` reports environment problems with a recovery step for each.
+- **Diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates, and `check --library` compares files with Music, using a bulk read only when its result is consistent and every track's cloud status is `unknown`, and otherwise the per-track read. `doctor` reports environment problems with a recovery step for each.
 
 ## Requirements
 
@@ -179,7 +179,7 @@ ilyrics doctor
 ### iLibrary
 
 ```
-ilibrary export PATH... -o CATALOG.json [--artwork DIR] [--dry-run]
+ilibrary export PATH... -o CATALOG.json [--artwork DIR] [--strict] [--dry-run]
 ilibrary prompt CATALOG.json
 ilibrary schema
 ilibrary validate CATALOG.json [PATH...]
@@ -279,7 +279,7 @@ Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it fi
 
 - Version 0.2.0 is experimental. Music commands were validated in a separate test user on one macOS version; follow the separate-user procedure before considering a personal library.
 - `rebuild prepare` was qualified once by the maintainer, on a synthetic library of 12 tracks on one Mac with macOS 27.0.1 and Music 1.7 and one external HFS+ backup drive. A successful run shows only that the checks it reports passed at that time; it does not guarantee that a personal library or backup medium can be recovered. Keep independent backups.
-- The bulk read of `check --library` matched the per-track read in one maintainer-run comparison on a synthetic library of 12 tracks. Its speed with larger libraries and its behavior with other cloud statuses were not measured.
+- In one maintainer-run comparison on a synthetic library of 12 tracks, `check --library` with the guarded bulk read gave the same results as the previous per-track command. Which read was used, its speed with larger libraries, and its behavior with other cloud statuses were not measured.
 - Albums added to a library with iCloud Music Library may be matched with albums in the Apple Music catalog. iLibrary removes store identifiers and reports the cloud statuses that Music exposes; the effect on matching has not been measured, and iLibrary does not claim to prevent matching.
 - Conversion supports mono and stereo only and refuses floating-point PCM; FLAC fields outside the standard set are not carried. Catalogs are exported from `.m4a` files only.
 - Mutating batches are not transactions: a later failure can leave earlier files or albums completed. Keep backups and the addition journal.
