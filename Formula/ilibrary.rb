@@ -2,9 +2,9 @@
 class Ilibrary < Formula
   desc "Catalog-driven music tagging and ordered import into Apple Music"
   homepage "https://github.com/x96x64/ilibrary"
-  url "https://github.com/x96x64/ilibrary/releases/download/v0.1.0/ilibrary-0.1.0-source.tar.gz"
-  version "0.1.0"
-  sha256 "7bf0b4a4af208c9ac0941f5bc46c97f78e8af6ff6a56532e83f6fbaef5c68368"
+  url "https://github.com/x96x64/ilibrary/releases/download/v0.2.0/ilibrary-0.2.0-source.tar.gz"
+  version "0.2.0"
+  sha256 "04150bd2fd07e40970f1cf5e0aee46f73161e3954b0a5112945c5daf6bb2d58e"
   license "Apache-2.0"
 
   depends_on arch: :arm64
