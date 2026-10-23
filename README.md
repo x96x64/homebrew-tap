@@ -26,23 +26,23 @@ The two tools share a platform and a distribution channel but not a purpose. The
 
 iLyrics turns a recording and its lyrics into a portrait video of the Lyrics screen of the Music app on iPhone. Plain lyrics are synchronized automatically, line by line and word by word; lyrics that already carry timing are rendered as supplied. Vocal separation and speech recognition run through Core ML on your Mac, and no network service is involved after the one-time model installation.
 
-- **Automatic synchronization.** Plain text lyrics are aligned line by line and word by word against a separated vocal stem. English is supported; Japanese with `--language ja` is experimental. Lines without reliable timing are placed rather than aligned and are reported.
-- **A faithful Lyrics screen.** Focus motion, word fill, instrumental-gap indicators, a scrolling title, an artwork-derived background, and controls that hide after playback starts follow reference recordings of the Music app on iPhone.
-- **Supplied timing.** Supported subsets of TTML, LRC, and Enhanced LRC are rendered without automatic realignment.
-- **Reviewable alignment.** `align` writes word-timed TTML and an optional JSON report, so that timing can be inspected and corrected before rendering.
-- **Local models.** `ilyrics models` installs, reports, and removes the alignment models, which are downloaded from their publishers, verified, and rebuilt on your Mac.
-- **Diagnostics.** `ilyrics doctor` shows the installed version and where it was installed from, checks each requirement, and gives a recovery step for each problem.
+- **Automatic synchronization:** Plain text lyrics are aligned line by line and word by word against a separated vocal stem. English is supported; Japanese with `--language ja` is experimental. Lines without reliable timing are placed rather than aligned and are reported.
+- **A faithful Lyrics screen:** Focus motion, word fill, instrumental-gap indicators, a scrolling title, an artwork-derived background, and controls that hide after playback starts follow reference recordings of the Music app on iPhone.
+- **Supplied timing:** Supported subsets of TTML, LRC, and Enhanced LRC are rendered without automatic realignment.
+- **Reviewable alignment:** `align` writes word-timed TTML and an optional JSON report, so that timing can be inspected and corrected before rendering.
+- **Local models:** `ilyrics models` installs, reports, and removes the alignment models, which are downloaded from their publishers, verified, and rebuilt on your Mac.
+- **Diagnostics:** `ilyrics doctor` shows the installed version and where it was installed from, checks each requirement, and gives a recovery step for each problem.
 
 ### iLibrary
 
 iLibrary prepares downloaded music for a local Apple Music library. It works on files first and touches Music only in the final stages, and every mutating command offers `--dry-run`, lists its changes before making them, and checks its result afterwards. Begin with copies and keep independent backups of your library.
 
-- **Verified import.** `import` converts FLAC, WAV, and AIFF downloads to Apple Lossless through AudioToolbox and verifies each output by decoded PCM equality. It copies iTunes Store M4A files without re-encoding and removes their purchase metadata. With `--delete-originals`, originals are moved to the Trash only after every output has been verified.
-- **Catalog workflow.** `export` drafts an `ilibrary-catalog-1` JSON catalog from existing tags, and `prompt` prints it with authoring rules so that an AI agent or chat can complete it. `validate` checks the catalog and its correspondence with the files, and `apply` writes it to the files without re-encoding the audio, honoring the catalog's title rules.
-- **Music-style names and dates.** `apply --rename` arranges files as `Album Artist/Album/NN Song.m4a`, or `D-NN Song.m4a` on multi-disc albums. `apply --timestamps` and `timestamps` set file and folder dates to release dates.
-- **Ordered addition.** `add` moves each album into the Music media folder and adds it in place, in one of four orders: `release`, `artist`, `artist-desc`, or `artist-release`. Each album is added after the previous album's addition second has passed and been confirmed, so that the addition times are separated and Recently Added can show the intended order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
-- **Checks and diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates in files, and `check --library` compares the files with Music and reports every difference. `doctor` reports environment problems with a recovery step for each, without launching Music or reading its library.
-- **Library rebuilding.** `rebuild prepare` inventories the selected files and every Music registration, verifies a backup on separate storage with a restoration test, and writes a private recovery record. `rebuild stage`, `clear`, `apply`, and `add` then move the files out of the media folder, remove exactly the recorded registrations, write the catalog to the files while Music is closed, and add the albums again in the recorded order, and `rebuild status` reports the progress.
+- **Verified import:** `import` converts FLAC, WAV, and AIFF downloads to Apple Lossless through AudioToolbox and verifies each output by decoded PCM equality. It copies iTunes Store M4A files without re-encoding and removes their purchase metadata. With `--delete-originals`, originals are moved to the Trash only after every output has been verified.
+- **Catalog workflow:** `export` drafts an `ilibrary-catalog-1` JSON catalog from existing tags, and `prompt` prints it with authoring rules so that an AI agent or chat can complete it. `validate` checks the catalog and its correspondence with the files, and `apply` writes it to the files without re-encoding the audio, honoring the catalog's title rules.
+- **Music-style names and dates:** `apply --rename` arranges files as `Album Artist/Album/NN Song.m4a`, or `D-NN Song.m4a` on multi-disc albums. `apply --timestamps` and `timestamps` set file and folder dates to release dates.
+- **Ordered addition:** `add` moves each album into the Music media folder and adds it in place, in one of four orders: `release`, `artist`, `artist-desc`, or `artist-release`. Each album is added after the previous album's addition second has passed and been confirmed, so that the addition times are separated and Recently Added can show the intended order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
+- **Checks and diagnostics:** `check` reports missing tags, duplicate tracks, and incorrect dates in files, and `check --library` compares the files with Music and reports every difference. `doctor` reports environment problems with a recovery step for each, without launching Music or reading its library.
+- **Library rebuilding:** `rebuild prepare` inventories the selected files and every Music registration, verifies a backup on separate storage with a restoration test, and writes a private recovery record. `rebuild stage`, `clear`, `apply`, and `add` then move the files out of the media folder, remove exactly the recorded registrations, write the catalog to the files while Music is closed, and add the albums again in the recorded order, and `rebuild status` reports the progress.
 
 ## Requirements
 
@@ -185,7 +185,7 @@ brew upgrade ilibrary    # iLibrary
 
 ### iLyrics
 
-Only the latest release receives fixes. `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise.
+Only the latest release receives fixes. `brew upgrade ilyrics` rebuilds the command from the new tagged source archive, which needs the same Swift 6 toolchain as installation, and `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise.
 
 ### iLibrary
 
