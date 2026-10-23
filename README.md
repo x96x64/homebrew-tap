@@ -195,7 +195,7 @@ ilibrary check [PATH...] [--library]
 ilibrary doctor
 ```
 
-Every mutating command offers `--dry-run`, states what it will change before changing it, and verifies its result afterwards. `import --delete-originals` moves originals to the Trash only after every output has been verified. The subcommands `rebuild stage`, `rebuild clear`, `rebuild apply`, and `rebuild add` are reserved: each reports that it is planned and exits with status 2. Exit status is 0 on success, 1 on a failure or a finding from `check` or `doctor`, and 2 on a usage error. See the [iLibrary command reference](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) for every option.
+Every mutating command offers `--dry-run`, states what it will change before changing it, and verifies its result afterwards. `import --delete-originals` moves originals to the Trash only after every output has been verified. The `rebuild` stages run in the order `prepare`, `stage`, `clear`, `apply`, and `add`: they move the files out of the media folder, remove the recorded registrations, write the catalog to the files, and add the albums again, each refusing to run out of order. Exit status is 0 on success, 1 on a failure or a finding from `check` or `doctor`, and 2 on a usage error. See the [iLibrary command reference](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) for every option.
 
 ## Updating
 
