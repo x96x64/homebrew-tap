@@ -14,7 +14,7 @@ brew install x96x64/tap/ilibrary
 | Formula | Command | Description | Version | Source |
 | --- | --- | --- | --- | --- |
 | [`ilyrics`](Formula/ilyrics.rb) | `ilyrics` | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.3.2 | Tagged source archive |
-| [`ilibrary`](Formula/ilibrary.rb) | `ilibrary` | Catalog-driven music tagging and ordered import into Apple Music | 1.0.2 | Verified release source archive |
+| [`ilibrary`](Formula/ilibrary.rb) | `ilibrary` | Catalog-driven music tagging and ordered import into Apple Music | 1.0.3 | Verified release source archive |
 
 Both formulae build their command from source on your Mac with Swift 6 and install no background service. Each formula declares Apple silicon and macOS 14 (Sonoma) or later, and each is licensed under the Apache License, Version 2.0.
 
@@ -78,7 +78,7 @@ This command adds the tap and installs `ilyrics`, together with the weightless m
 brew install x96x64/tap/ilibrary
 ```
 
-This command adds the tap and installs `ilibrary`, built from the verified 1.0.2 release source archive. The formula installs the executable only; the catalog schema is built in and printed by `ilibrary schema`. iLibrary has no separate model or data installation step, and installation does not access Music. Run `ilibrary --version` to confirm the installation, then `ilibrary doctor`, which reports the installed Music version, the media folder, available capacity, and the stored Automation permission with a recovery step for each problem. `doctor` does not launch Music, request permission, or read library tracks.
+This command adds the tap and installs `ilibrary`, built from the verified 1.0.3 release source archive. The formula installs the executable only; the catalog schema is built in and printed by `ilibrary schema`. iLibrary has no separate model or data installation step, and installation does not access Music. Run `ilibrary --version` to confirm the installation, then `ilibrary doctor`, which reports the installed Music version, the media folder, available capacity, and the stored Automation permission with a recovery step for each problem. `doctor` does not launch Music, request permission, or read library tracks.
 
 ### Installing with a Brewfile
 
