@@ -185,7 +185,7 @@ brew upgrade ilibrary    # iLibrary
 
 ### iLyrics
 
-Only the latest release receives fixes. `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise.
+Only the latest release receives fixes. `brew upgrade ilyrics` rebuilds the command from the new tagged source archive, which needs the same Swift 6 toolchain as installation, and `ilyrics doctor` shows the installed version and the command that updates it. The installed models remain valid across updates unless the [changelog](https://github.com/x96x64/ilyrics/blob/main/CHANGELOG.md) states otherwise.
 
 ### iLibrary
 
