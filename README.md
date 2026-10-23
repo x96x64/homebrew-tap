@@ -1,36 +1,13 @@
 # Homebrew Tap for iLyrics and iLibrary
 
-This tap distributes two independent command-line tools for music on macOS. [iLyrics](https://github.com/x96x64/ilyrics) renders lyrics videos that reproduce the Lyrics screen of the Music app on iPhone and synchronizes plain lyrics to a recording on your Mac. [iLibrary](https://github.com/x96x64/ilibrary) prepares music files through a JSON catalog: it converts and copies downloads, manages their metadata, names files and folders, and adds albums to a local Apple Music library in a controlled order.
+This tap distributes two independent command-line tools for music on macOS. [iLyrics](https://github.com/x96x64/ilyrics) renders lyrics videos that reproduce the Lyrics screen of the Music app on iPhone and synchronizes plain lyrics to a recording on your Mac. [iLibrary](https://github.com/x96x64/ilibrary) prepares music files through a reviewed JSON catalog and adds them, album by album and in a chosen order, to a local Apple Music library.
 
-Neither formula depends on the other. Install only the formulae you need; each section below covers iLyrics first and iLibrary second.
-
-## iLyrics
+Neither formula depends on the other, and you can install only the one you need. This README explains how to install, update, and remove the formulae and summarizes what each tool does and where its verification stops. The authoritative documentation of each product is in its own repository, linked under Documentation and Support.
 
 ```bash
 brew install x96x64/tap/ilyrics
-```
-
-## iLibrary
-
-```bash
 brew install x96x64/tap/ilibrary
 ```
-
-## Contents
-
-- [Formulae](#formulae)
-- [Overview](#overview)
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Updating](#updating)
-- [Uninstalling](#uninstalling)
-- [Troubleshooting](#troubleshooting)
-- [Limitations](#limitations)
-- [Documentation and Support](#documentation-and-support)
-- [License](#license)
 
 ## Formulae
 
@@ -39,21 +16,15 @@ brew install x96x64/tap/ilibrary
 | [`ilyrics`](Formula/ilyrics.rb) | `ilyrics` | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.3.2 | Tagged source archive |
 | [`ilibrary`](Formula/ilibrary.rb) | `ilibrary` | Catalog-driven music tagging and ordered import into Apple Music | 1.0.1 | Verified release source archive |
 
-Both formulae build their command from source on your Mac and install no background service.
-
-## Overview
-
-### iLyrics
-
-iLyrics turns a recording and its lyrics into a portrait video of the Lyrics screen of the Music app on iPhone. Plain lyrics are synchronized automatically, line by line and word by word; lyrics that already carry timing are rendered as supplied. Vocal separation and speech recognition run through Core ML on your Mac, and no network service is involved after the one-time model installation. Typical uses are lyrics videos for phones and social platforms, and word-timed TTML that can be reviewed and corrected before rendering.
-
-### iLibrary
-
-iLibrary prepares downloaded music for a local Apple Music library. It converts lossless downloads to Apple Lossless, copies iTunes Store purchases without their purchase metadata, applies metadata from a reviewed JSON catalog without re-encoding, names files as the Music app does, and sets file dates to release dates. It then adds albums to Music one at a time and reports differences between files and library records, and it can rebuild an existing library from its files after verifying a backup. Begin with copies and keep independent backups of your library.
+Both formulae build their command from source on your Mac with Swift 6 and install no background service. Each formula declares Apple silicon and macOS 14 (Sonoma) or later, and each is licensed under the Apache License, Version 2.0.
 
 ## Features
 
+The two tools share a platform and a distribution channel but not a purpose. The summaries below describe what each currently does, and the linked product documentation remains the authoritative description of every option and behavior.
+
 ### iLyrics
+
+iLyrics turns a recording and its lyrics into a portrait video of the Lyrics screen of the Music app on iPhone. Plain lyrics are synchronized automatically, line by line and word by word; lyrics that already carry timing are rendered as supplied. Vocal separation and speech recognition run through Core ML on your Mac, and no network service is involved after the one-time model installation.
 
 - **Automatic synchronization.** Plain text lyrics are aligned line by line and word by word against a separated vocal stem. English is supported; Japanese with `--language ja` is experimental. Lines without reliable timing are placed rather than aligned and are reported.
 - **A faithful Lyrics screen.** Focus motion, word fill, instrumental-gap indicators, a scrolling title, an artwork-derived background, and controls that hide after playback starts follow reference recordings of the Music app on iPhone.
@@ -64,17 +35,18 @@ iLibrary prepares downloaded music for a local Apple Music library. It converts 
 
 ### iLibrary
 
-- **Catalog-driven metadata.** `export` drafts an `ilibrary-catalog-1` JSON catalog from existing tags, `prompt` prepares it for completion by an AI agent or chat, `validate` checks it against the files, and `apply` writes it without re-encoding the audio. `export --strict` refuses, without writing, an export that is not a complete inventory.
-- **Lossless import.** `import` converts FLAC, WAV, and AIFF to Apple Lossless through AudioToolbox, verified by decoded PCM equality, and copies iTunes Store files without re-encoding while removing purchase metadata.
-- **Music-style names and dates.** `apply --rename` arranges files as `Album Artist/Album/NN Song.m4a`, and `timestamps` sets file and folder dates to release dates.
-- **Ordered addition to Music.** `add` moves each album into the Music media folder, adds it in place, and confirms it before the next album, in release or artist order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
-- **Library rebuilding.** `rebuild prepare` inventories the selected files, classifies every Music registration, verifies a backup on separate APFS or HFS+ storage with a restoration test, and writes a private recovery record. `rebuild stage`, `clear`, `apply`, and `add` then move the files out of the media folder, remove exactly the recorded registrations, write the catalog to the files while Music is closed, and add the albums again in the chosen order; `rebuild status` reports the progress.
-- **Previews and verification.** Every mutating command offers `--dry-run` and lists its changes first; written files are read back and compared with the plan.
-- **Diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates, and `check --library` compares files with Music, using a bulk read only when its result is consistent and every track's cloud status is `unknown`, and otherwise the per-track read. `doctor` reports environment problems with a recovery step for each.
+iLibrary prepares downloaded music for a local Apple Music library. It works on files first and touches Music only in the final stages, and every mutating command offers `--dry-run`, lists its changes before making them, and checks its result afterwards. Begin with copies and keep independent backups of your library.
+
+- **Verified import.** `import` converts FLAC, WAV, and AIFF downloads to Apple Lossless through AudioToolbox and verifies each output by decoded PCM equality. It copies iTunes Store M4A files without re-encoding and removes their purchase metadata. With `--delete-originals`, originals are moved to the Trash only after every output has been verified.
+- **Catalog workflow.** `export` drafts an `ilibrary-catalog-1` JSON catalog from existing tags, and `prompt` prints it with authoring rules so that an AI agent or chat can complete it. `validate` checks the catalog and its correspondence with the files, and `apply` writes it to the files without re-encoding the audio, honoring the catalog's title rules.
+- **Music-style names and dates.** `apply --rename` arranges files as `Album Artist/Album/NN Song.m4a`, or `D-NN Song.m4a` on multi-disc albums. `apply --timestamps` and `timestamps` set file and folder dates to release dates.
+- **Ordered addition.** `add` moves each album into the Music media folder and adds it in place, in one of four orders: `release`, `artist`, `artist-desc`, or `artist-release`. Each album is added after the previous album's addition second has passed and been confirmed, so that the addition times are separated and Recently Added can show the intended order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
+- **Checks and diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates in files, and `check --library` compares the files with Music and reports every difference. `doctor` reports environment problems with a recovery step for each, without launching Music or reading its library.
+- **Library rebuilding.** `rebuild prepare` inventories the selected files and every Music registration, verifies a backup on separate storage with a restoration test, and writes a private recovery record. `rebuild stage`, `clear`, `apply`, and `add` then move the files out of the media folder, remove exactly the recorded registrations, write the catalog to the files while Music is closed, and add the albums again in the recorded order, and `rebuild status` reports the progress.
 
 ## Requirements
 
-Both formulae require macOS 14 or later on Apple silicon and build with Swift 6.
+Both formulae require macOS 14 or later on Apple silicon and a Swift 6 toolchain, because Homebrew builds each command from source. The toolchain comes from Xcode or from the Command Line Tools, and each formula stops with a message if Swift 6 is missing.
 
 ### iLyrics
 
@@ -85,10 +57,12 @@ Both formulae require macOS 14 or later on Apple silicon and build with Swift 6.
 ### iLibrary
 
 - Swift 6 or later, provided by Xcode or the Command Line Tools
-- The Music app and Automation permission for the Music commands, `add` and `check --library`
-- An Apple Music subscription and an Apple Account are not required for the file commands or the separate-user validation procedure
+- The Music app and Automation permission for the commands that use Music: `add`, `check --library`, and the rebuilding stages that read or change the library
+- No Apple Music subscription or Apple Account for the file commands: `import`, `export`, `prompt`, `validate`, `apply`, `timestamps`, and `check` without `--library`
 
 ## Installation
+
+Each formula is installed by name from this tap, and `brew` adds the tap automatically on the first installation. Installation compiles the command on your Mac, which takes some minutes and needs the Swift 6 toolchain described under Requirements.
 
 ### iLyrics
 
@@ -119,6 +93,8 @@ Both projects are also distributed through npm and PyPI. iLyrics is `ilyrics` on
 
 ## Quick Start
 
+The sequences below show a first use of each tool. They are summaries, not a replacement for the product documentation, and they use placeholder file names that you replace with your own. Run each tool's `doctor` command first, because it reports a missing requirement before any work is done.
+
 ### iLyrics
 
 Prepare an unprotected recording and a UTF-8 `lyrics.txt` with the lead lyrics in sung order, one sung line per line. Replace the example paths with your files.
@@ -148,11 +124,11 @@ ilibrary doctor
 ilibrary import ./downloads -o ./staging --dry-run
 ilibrary import ./downloads -o ./staging
 
-# 3. Draft a catalog from the files' tags, then complete it by hand or with an AI agent
-ilibrary export ./staging -o catalog.json --dry-run
+# 3. Draft a catalog from the files' tags, then print the authoring prompt
 ilibrary export ./staging -o catalog.json
+ilibrary prompt catalog.json > prompt.md
 
-# 4. Validate the catalog and preview every change
+# 4. Complete the catalog by hand or with an AI agent, then validate and preview
 ilibrary validate catalog.json ./staging
 ilibrary apply catalog.json ./staging --rename --timestamps --dry-run
 
@@ -161,9 +137,11 @@ ilibrary apply catalog.json ./staging --rename --timestamps
 ilibrary check ./staging
 ```
 
-Adding albums with `ilibrary add` changes a Music library and moves the selected files out of staging. Begin with copies, keep independent backups of the library, preview `ilibrary add ./staging --order release --dry-run`, and keep the staging folder and its journal.
+The staged files then appear as `Album Artist/Album/NN Song.m4a`, with `D-NN Song.m4a` on multi-disc albums. Adding albums with `ilibrary add` changes a Music library and moves the selected files out of staging. Keep independent backups of the library, preview `ilibrary add ./staging --order release --dry-run`, and keep the staging folder and its journal.
 
 ## Usage
+
+The synopses below list the commands of each tool at the versions the formulae currently install. Run `ilyrics help` or `ilibrary help` for the installed command's own usage text, which is the reference for the version you have.
 
 ### iLyrics
 
@@ -195,7 +173,7 @@ ilibrary check [PATH...] [--library]
 ilibrary doctor
 ```
 
-Every mutating command offers `--dry-run`, states what it will change before changing it, and verifies its result afterwards. `import --delete-originals` moves originals to the Trash only after every output has been verified. The `rebuild` stages run in the order `prepare`, `stage`, `clear`, `apply`, and `add`: they move the files out of the media folder, remove the recorded registrations, write the catalog to the files, and add the albums again, each refusing to run out of order. Exit status is 0 on success, 1 on a failure or a finding from `check` or `doctor`, and 2 on a usage error. See the [iLibrary command reference](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) for every option.
+Every mutating command offers `--dry-run`, states what it will change before changing it, and verifies its result afterwards. `export --strict` refuses, without writing, an export that is not a complete inventory. The `rebuild` stages run in the order `prepare`, `stage`, `clear`, `apply`, and `add`, each refusing to run out of order. Exit status is 0 on success, 1 on a failure or a finding from `check` or `doctor`, and 2 on a usage error. See the [iLibrary command reference](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) for every option and [Catalogs](https://github.com/x96x64/ilibrary/blob/main/docs/catalogs.md) for the catalog format and title rules.
 
 ## Updating
 
@@ -211,9 +189,11 @@ Only the latest release receives fixes. `ilyrics doctor` shows the installed ver
 
 ### iLibrary
 
-Before adopting a new version, read the [changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and the [roadmap](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap.md). Updating replaces the executable only; catalogs, staging folders, and addition journals remain unchanged. If an `add` run was interrupted, keep its staging folder and journal and read the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md) before resuming.
+Before adopting a new version, read the [changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and the [roadmap](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap.md). Updating replaces the executable only; catalogs, staging folders, and addition journals remain unchanged. If an `add` run was interrupted, keep its staging folder and journal and read the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md#interrupted-addition) before resuming.
 
 ## Uninstalling
+
+Removing a formula removes the command and nothing else that the tool created. Follow the steps for each tool you installed, and untap the repository last. Files that you created with the tools, such as videos, catalogs, and converted albums, are your own and are never deleted by uninstalling.
 
 ### iLyrics
 
@@ -244,7 +224,7 @@ brew untap x96x64/tap
 
 ## Troubleshooting
 
-Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it finds with a recovery step.
+Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it finds with a recovery step. The tables below list the failures that occur most often during installation and first use, with the next step for each. If a failure persists, include the output of `brew config` and of the tool's `doctor` command in a report, after removing personal paths.
 
 ### iLyrics
 
@@ -262,13 +242,16 @@ Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it fi
 | Symptom | Next Step |
 | --- | --- |
 | The build stops because Swift 6 is missing | Install Xcode or the Command Line Tools with Swift 6 or later, then run `brew install x96x64/tap/ilibrary` again. |
-| Music cannot be controlled | Run `ilibrary doctor` in the intended test user and follow its Automation permission instructions. |
+| Music cannot be controlled | Run `ilibrary doctor` and follow its Automation permission instructions. |
 | A matching track already exists | Stop and inspect the duplicate. iLibrary never removes the existing entry automatically. |
-| A run stopped while adding an album | Keep the staging folder and journal, and preview the same `add` command before resuming; see the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md). |
+| A run stopped while adding an album | Keep the staging folder and journal, and preview the same `add` command before resuming; see the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md#interrupted-addition). |
 | A catalog does not match every file | Run `validate` with the selected paths and correct the catalog or the selection before applying. |
+| `check --library` reports differences | Review them; `check` does not refresh, relink, rename, or delete Music entries. |
 | Space is insufficient or a destination exists | Free space or choose a new destination. Do not delete an unverified original to make the command succeed. |
 
 ## Limitations
+
+The limits below are summaries. Each product README states them in full, with the measurements and reports behind them, and a statement that a behavior was not measured means that it is unknown and not that it works.
 
 ### iLyrics
 
@@ -279,10 +262,10 @@ Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it fi
 
 ### iLibrary
 
-- Music behavior was measured in a separate test user on one macOS version with Music 1.7, and Music operations are tested with a substitute library; the rebuilding stages have not been run against the Music application.
-- `rebuild prepare` was exercised once on a synthetic library of 12 tracks with one external HFS+ backup drive. A successful run shows only that the checks it reports passed at that time; it does not guarantee that a library or backup medium can be recovered. Keep independent backups.
-- In one maintainer-run comparison on a synthetic library of 12 tracks, `check --library` with the guarded bulk read gave the same results as the previous per-track command. Which read was used, its speed with larger libraries, and its behavior with other cloud statuses were not measured.
-- Albums added to a library with iCloud Music Library may be matched with albums in the Apple Music catalog. iLibrary removes store identifiers and reports the cloud statuses that Music exposes; the effect on matching has not been measured, and iLibrary does not claim to prevent matching.
+- File processing is verified with synthetic files, and Music operations are tested with a substitute library. The forms of the requests that iLibrary sends to Music were measured on macOS 27.0.1 with Music 1.7. Behavior with iCloud Music Library and on other macOS and Music versions is unknown.
+- The rebuilding stages are tested with a substitute library and have not been run against the Music application. `rebuild prepare` was exercised once on a synthetic library of 12 tracks with one external HFS+ backup drive; a successful run shows only that the checks it reports passed at that time, and it does not guarantee that a library or backup medium can be recovered. Keep independent backups.
+- The expected order in Recently Added is judged from the addition times that Music exposes, which were measured to be separated and increasing, and not by observing the display. An empty library after `rebuild clear` means that Music reports no tracks.
+- Albums added to a library with iCloud Music Library may be matched with albums in the Apple Music catalog. iLibrary removes store identifiers and reports the cloud statuses that Music exposes; it does not claim to prevent cloud matching, and the effect on matching has not been measured.
 - Conversion supports mono and stereo only and refuses floating-point PCM; FLAC fields outside the standard set are not carried. Catalogs are exported from `.m4a` files only.
 - Mutating batches are not transactions: a later failure can leave earlier files or albums completed. Keep backups and the addition journal.
 - Protected audio (`.m4p`) is out of scope, and iLibrary does not download audio.
@@ -290,6 +273,8 @@ Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it fi
 Neither project is affiliated with, endorsed by, or sponsored by Apple.
 
 ## Documentation and Support
+
+The product documentation lives in the two source repositories, and problems with a product belong in that product's issue tracker. Problems with installing or building through Homebrew belong in this repository's issues.
 
 ### iLyrics
 
@@ -301,14 +286,18 @@ Neither project is affiliated with, endorsed by, or sponsored by Apple.
 
 ### iLibrary
 
-- [README](https://github.com/x96x64/ilibrary#readme): features, catalog format, Apple Music and cloud matching, and limitations
-- [Command-Line Interface](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) and [Completing Catalogs with AI Agents](https://github.com/x96x64/ilibrary/blob/main/docs/catalog-for-agents.md)
+- [README](https://github.com/x96x64/ilibrary#readme): features, installation channels, rebuilding, Apple Music and cloud matching, and limitations
+- [Command-Line Interface](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) and [Catalogs](https://github.com/x96x64/ilibrary/blob/main/docs/catalogs.md): the catalog format, title rules, and authoring with AI agents
 - [Library Operations and Recovery](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md): dry runs, interrupted runs, rebuilding, and measured Music behavior
 - [Changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and [Roadmap](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap.md): changes and verification limits
 - [Security Policy](https://github.com/x96x64/ilibrary/blob/main/SECURITY.md) and the [issue tracker](https://github.com/x96x64/ilibrary/issues)
 
-Report problems specific to a formula in this repository's issues.
+Report problems specific to a formula, such as a failed build or a stale checksum, in this repository's [issues](https://github.com/x96x64/homebrew-tap/issues).
 
 ## License
 
-The formulae in this repository are licensed under the [Apache License, Version 2.0](LICENSE), the license of iLyrics and iLibrary.
+The formulae in this repository, iLyrics, and iLibrary are each licensed under the [Apache License, Version 2.0](LICENSE), and so is the software that the formulae build. The license permits you to use, modify, and redistribute the software, including in modified form, provided that you give recipients a copy of the license, retain the copyright, patent, and attribution notices, and mark the files you changed. The software is provided "as is", without warranty of any kind, and the license limits the liability of its authors; the license text itself is the binding statement of these terms.
+
+The Apache License covers the source code, documentation, and executables of these projects. It does not grant rights in the material that the tools process or refer to: music recordings, lyrics, artwork, and images remain subject to the terms of their rights holders, and you are responsible for holding the rights to what you convert, tag, add to a library, or render into a video. Apple, Apple Music, Music, and macOS are trademarks of Apple Inc., and nothing in the license permits their use; the SF Symbols that iLyrics resolves from your Mac at render time are likewise governed by Apple's own license.
+
+The alignment models that iLyrics downloads are not part of this tap and remain under their publishers' licenses. Homebrew itself and the Swift toolchain are separate software under their own terms. This section summarizes the licensing for convenience and is not legal advice; consult the license text and, where your use depends on it, a qualified adviser.
