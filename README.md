@@ -37,7 +37,7 @@ brew install x96x64/tap/ilibrary
 | Formula | Command | Description | Version | Source |
 | --- | --- | --- | --- | --- |
 | [`ilyrics`](Formula/ilyrics.rb) | `ilyrics` | Lyrics videos of the iPhone Music Lyrics screen, with on-device synchronization | 1.3.2 | Tagged source archive |
-| [`ilibrary`](Formula/ilibrary.rb) | `ilibrary` | Catalog-driven music tagging and ordered import into Apple Music | 0.2.0 (experimental) | Verified release source archive |
+| [`ilibrary`](Formula/ilibrary.rb) | `ilibrary` | Catalog-driven music tagging and ordered import into Apple Music | 0.3.0 (experimental) | Verified release source archive |
 
 Both formulae build their command from source on your Mac and install no background service.
 
@@ -49,7 +49,7 @@ iLyrics turns a recording and its lyrics into a portrait video of the Lyrics scr
 
 ### iLibrary
 
-iLibrary prepares downloaded music for a local Apple Music library. It converts lossless downloads to Apple Lossless, copies iTunes Store purchases without their purchase metadata, applies metadata from a reviewed JSON catalog without re-encoding, names files as the Music app does, and sets file dates to release dates. It then adds albums to Music one at a time and reports differences between files and library records, and it can verify a backup and write a recovery record before a library is rebuilt. Version 0.2.0 is experimental: begin with copies, and validate Music operations in a separate test user before using a personal library.
+iLibrary prepares downloaded music for a local Apple Music library. It converts lossless downloads to Apple Lossless, copies iTunes Store purchases without their purchase metadata, applies metadata from a reviewed JSON catalog without re-encoding, names files as the Music app does, and sets file dates to release dates. It then adds albums to Music one at a time and reports differences between files and library records, and it can rebuild an existing library from its files after verifying a backup. Version 0.3.0 is experimental: begin with copies and keep independent backups of your library.
 
 ## Features
 
@@ -68,7 +68,7 @@ iLibrary prepares downloaded music for a local Apple Music library. It converts 
 - **Lossless import.** `import` converts FLAC, WAV, and AIFF to Apple Lossless through AudioToolbox, verified by decoded PCM equality, and copies iTunes Store files without re-encoding while removing purchase metadata.
 - **Music-style names and dates.** `apply --rename` arranges files as `Album Artist/Album/NN Song.m4a`, and `timestamps` sets file and folder dates to release dates.
 - **Ordered addition to Music.** `add` moves each album into the Music media folder, adds it in place, and confirms it before the next album, in release or artist order. It stops when the library already holds a matching track and resumes an interrupted run from its journal.
-- **Backup and recovery preparation.** `rebuild prepare` inventories the selected files, classifies every Music registration, verifies a backup on separate APFS or HFS+ storage with a restoration test, and writes a private recovery record that `rebuild status` reports. Neither subcommand changes Music, the source files, or the backup; the staged rebuilding of a library is not implemented.
+- **Library rebuilding.** `rebuild prepare` inventories the selected files, classifies every Music registration, verifies a backup on separate APFS or HFS+ storage with a restoration test, and writes a private recovery record. `rebuild stage`, `clear`, `apply`, and `add` then move the files out of the media folder, remove exactly the recorded registrations, write the catalog to the files while Music is closed, and add the albums again in the chosen order; `rebuild status` reports the progress.
 - **Previews and verification.** Every mutating command offers `--dry-run` and lists its changes first; written files are read back and compared with the plan.
 - **Diagnostics.** `check` reports missing tags, duplicate tracks, and incorrect dates, and `check --library` compares files with Music, using a bulk read only when its result is consistent and every track's cloud status is `unknown`, and otherwise the per-track read. `doctor` reports environment problems with a recovery step for each.
 
@@ -104,7 +104,7 @@ This command adds the tap and installs `ilyrics`, together with the weightless m
 brew install x96x64/tap/ilibrary
 ```
 
-This command adds the tap and installs `ilibrary`, built from the verified 0.2.0 release source archive. The formula installs the executable only; the catalog schema is built in and printed by `ilibrary schema`. iLibrary has no separate model or data installation step, and installation does not access Music. Run `ilibrary --version` to confirm the installation, then `ilibrary doctor`, which reports the installed Music version, the media folder, available capacity, and the stored Automation permission with a recovery step for each problem. `doctor` does not launch Music, request permission, or read library tracks.
+This command adds the tap and installs `ilibrary`, built from the verified 0.3.0 release source archive. The formula installs the executable only; the catalog schema is built in and printed by `ilibrary schema`. iLibrary has no separate model or data installation step, and installation does not access Music. Run `ilibrary --version` to confirm the installation, then `ilibrary doctor`, which reports the installed Music version, the media folder, available capacity, and the stored Automation permission with a recovery step for each problem. `doctor` does not launch Music, request permission, or read library tracks.
 
 ### Installing with a Brewfile
 
@@ -161,7 +161,7 @@ ilibrary apply catalog.json ./staging --rename --timestamps
 ilibrary check ./staging
 ```
 
-Adding albums with `ilibrary add` changes a Music library and moves the selected files out of staging. Before considering a personal library, follow [Test Library Validation](https://github.com/x96x64/ilibrary/blob/main/docs/test-library-validation.md), a procedure written in Japanese, in a separate macOS user, preview `ilibrary add ./staging --order release --dry-run` there, and keep the staging folder and its journal.
+Adding albums with `ilibrary add` changes a Music library and moves the selected files out of staging. Begin with copies, keep independent backups of the library, preview `ilibrary add ./staging --order release --dry-run`, and keep the staging folder and its journal.
 
 ## Usage
 
@@ -187,6 +187,8 @@ ilibrary apply CATALOG.json PATH... [--dry-run] [--rename] [--timestamps]
 ilibrary import SOURCE... -o DIR [--from mora|itunes|auto] [--delete-originals] [--dry-run]
 ilibrary add PATH... [--order release|artist|artist-desc|artist-release] [--dry-run]
 ilibrary rebuild prepare CATALOG.json SOURCE --workspace DIR --backup DIR --restore-test DIR --staging DIR [--dry-run]
+ilibrary rebuild stage|clear --workspace DIR [--dry-run]
+ilibrary rebuild apply|add --workspace DIR [--timestamps] [--dry-run]
 ilibrary rebuild status --workspace DIR
 ilibrary timestamps CATALOG.json PATH... [--dry-run] [--script FILE]
 ilibrary check [PATH...] [--library]
@@ -209,7 +211,7 @@ Only the latest release receives fixes. `ilyrics doctor` shows the installed ver
 
 ### iLibrary
 
-Version 0.2.0 is experimental. Before adopting a new version, read the [changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and [Current Status](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap-to-stable.md). Updating replaces the executable only; catalogs, staging folders, and addition journals remain unchanged. If an `add` run was interrupted, keep its staging folder and journal and read the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md) before resuming.
+Version 0.3.0 is experimental. Before adopting a new version, read the [changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and the [roadmap](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap.md). Updating replaces the executable only; catalogs, staging folders, and addition journals remain unchanged. If an `add` run was interrupted, keep its staging folder and journal and read the [recovery guidance](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md) before resuming.
 
 ## Uninstalling
 
@@ -277,8 +279,8 @@ Run `ilyrics doctor` or `ilibrary doctor` first; each reports the problems it fi
 
 ### iLibrary
 
-- Version 0.2.0 is experimental. Music commands were validated in a separate test user on one macOS version; follow the separate-user procedure before considering a personal library.
-- `rebuild prepare` was qualified once by the maintainer, on a synthetic library of 12 tracks on one Mac with macOS 27.0.1 and Music 1.7 and one external HFS+ backup drive. A successful run shows only that the checks it reports passed at that time; it does not guarantee that a personal library or backup medium can be recovered. Keep independent backups.
+- Version 0.3.0 is experimental. Music behavior was measured in a separate test user on one macOS version with Music 1.7, and Music operations are tested with a substitute library; the rebuilding stages have not been run against the Music application.
+- `rebuild prepare` was exercised once on a synthetic library of 12 tracks with one external HFS+ backup drive. A successful run shows only that the checks it reports passed at that time; it does not guarantee that a library or backup medium can be recovered. Keep independent backups.
 - In one maintainer-run comparison on a synthetic library of 12 tracks, `check --library` with the guarded bulk read gave the same results as the previous per-track command. Which read was used, its speed with larger libraries, and its behavior with other cloud statuses were not measured.
 - Albums added to a library with iCloud Music Library may be matched with albums in the Apple Music catalog. iLibrary removes store identifiers and reports the cloud statuses that Music exposes; the effect on matching has not been measured, and iLibrary does not claim to prevent matching.
 - Conversion supports mono and stereo only and refuses floating-point PCM; FLAC fields outside the standard set are not carried. Catalogs are exported from `.m4a` files only.
@@ -301,9 +303,9 @@ Neither project is affiliated with, endorsed by, or sponsored by Apple.
 
 - [README](https://github.com/x96x64/ilibrary#readme): features, catalog format, Apple Music and cloud matching, and limitations
 - [Command-Line Interface](https://github.com/x96x64/ilibrary/blob/main/docs/command-line-interface.md) and [Completing Catalogs with AI Agents](https://github.com/x96x64/ilibrary/blob/main/docs/catalog-for-agents.md)
-- [Library Operations and Recovery](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md) and [Test Library Validation](https://github.com/x96x64/ilibrary/blob/main/docs/test-library-validation.md)
-- [Changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and [Current Status](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap-to-stable.md): changes and verification status
-- [Support](https://github.com/x96x64/ilibrary/blob/main/SUPPORT.md) and the [issue tracker](https://github.com/x96x64/ilibrary/issues)
+- [Library Operations and Recovery](https://github.com/x96x64/ilibrary/blob/main/docs/library-operations.md): dry runs, interrupted runs, rebuilding, and measured Music behavior
+- [Changelog](https://github.com/x96x64/ilibrary/blob/main/CHANGELOG.md) and [Roadmap](https://github.com/x96x64/ilibrary/blob/main/docs/roadmap.md): changes and verification limits
+- [Security Policy](https://github.com/x96x64/ilibrary/blob/main/SECURITY.md) and the [issue tracker](https://github.com/x96x64/ilibrary/issues)
 
 Report problems specific to a formula in this repository's issues.
 
